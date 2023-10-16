@@ -139,15 +139,44 @@ def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
     from util import PriorityQueue
-    pqueue=PriorityQueue()
-    visited=[] #a list that saves which node we have already visited
+    pqueue=PriorityQueue() #pqueue is gonna save the xy and the path as a tuple and the minimum distance (maximum priority)
+    visited=set() #a list that saves which node we have already visited
     currnode= problem.getStartState()
-    neighbor_nodes=problem.getSuccessors(currnode)
+    neighbor_nodes=set()
     path=[] #initializing path as an empty list
-    for next_node in neighbor_nodes:
-        st_node_in_question=
-      #  if next_node not in visited and
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+    pqueue.push((currnode,[]),0) #there is no path at the start
+
+    while pqueue: #while the graph still has nodes
+        old_distance=0
+        currnode,path=pqueue.pop()
+        if problem.isGoalState(currnode)==1:
+            return path
+        if currnode not in visited:
+            visited.add(currnode)
+        neighbor_nodes=problem.getSuccessors(currnode)
+            
+        for next_node in neighbor_nodes:
+            if next_node[0] not in visited and not any(next_node[0]==node[2][0] for node in pqueue.heap): #Σημαντική επεξήγση: Στο utils.h το heappush είναι της μορφής (priority, self.count, item)
+                new_path=path+[next_node[1]]                                                              #Συνεπώς το node[2][0] επιστρέφει το χψ, και το node[2][1] το new_path που κάνουμε push.  
+                distance=problem.getCostOfActions(new_path)                                               #Η διαδικασία κατανόησης, ΔΕΝ είχε πλάκα!!
+                pqueue.push((next_node[0],new_path),distance)
+            if next_node[0] not in visited and  any(next_node[0]==node[2][0] for node in pqueue.heap):
+                for node in pqueue.heap:
+                    if node[2][0]==next_node[0]:
+                        old_distance=problem.getCostOfActions(node[2][1])
+                new_distance=problem.getCostOfActions(path+[next_node[1]])
+
+
+                if new_distance<old_distance:
+                    new_path=path+[next_node[1]]
+                    pqueue.update((next_node[0],new_path),distance)
+           
+
+            
+            
+            
+            
+
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
