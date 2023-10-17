@@ -193,23 +193,33 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     pqueue=PriorityQueue() #will return the xy,the path and the cost(distance)
     path=[]
     currnode=problem.getStartState()
-    neighbor_nodes=problem.getSuccessors(currnode)
-    visited={}
+    visited=set()
     pqueue.push((currnode,[]),0)
-    visited[currnode]=heuristic(currnode,problem)
-    pqueue.push((currnode,[]),0)
-    while pqueue:
+    while not pqueue.isEmpty():
         currnode,path=pqueue.pop()
         if problem.isGoalState(currnode)==1:
             return path
         if currnode not in visited:
-            visited[currnode]=heuristic(currnode,problem)
+            visited.add(currnode)
         neighbor_nodes=problem.getSuccessors(currnode)
         for next_node in neighbor_nodes:
-            if next_node[0] not in visited.keys() and (next_node[0]==node for node in pqueue.heap):
+            if next_node[0] not in visited and not any (next_node[0]==node[2][0] for node in pqueue.heap):
                 new_path=path+[next_node[1]]
-                distance=problem.getCostOfActions(new_path)+heuristic(next_node[0],problem)
-                pqueue.update((next_node[0],new_path),distance)
+                star_distance=problem.getCostOfActions(new_path)+heuristic(next_node[0],problem)
+                pqueue.push((next_node[0],new_path),star_distance)
+
+            if next_node[0] not in visited and any (next_node[0]==node[2][0] for node in pqueue.heap):
+                for node in pqueue.heap:
+                    if node[2][0]==next_node[0]:
+                        old_star_distance=problem.getCostOfActions(node[2][1])+heuristic(node[2][0],problem)
+                        new_star_distance=problem.getCostOfActions(path+[next_node[1]])+heuristic(next_node[0],problem)
+                        if new_star_distance<old_star_distance:
+                            new_path=path+[next_node[1]]
+                            pqueue.update((next_node[0],new_path),new_star_distance)
+    
+            
+           
+
             #if next_node[0] not in visited.keys() and  any(next_node[0]==node[2][0] for node in pqueue.heap):
                 #for node in pqueue.heap:
                   #  if node[2][0]==next_node[0]:
