@@ -88,6 +88,7 @@ def depthFirstSearch(problem: SearchProblem):
     """
     "*** YOUR CODE HERE ***"
     from util import Stack
+    print("Start:", problem.getStartState())
     stack=Stack() #υλοποιείται στο util.h με λίστα
     path=[] 
     visited=[]
@@ -118,10 +119,10 @@ def breadthFirstSearch(problem: SearchProblem):
     "*** YOUR CODE HERE ***"
     from util import Queue
     queue=Queue()
-    visited=set() #a list to mark which queue we have visited
+    visited=[]#a list to mark which queue we have visited
     path=[] #a list with the actions the pac man needs to follow in order to find the goal
     currnode=problem.getStartState()
-    visited.add(currnode)
+    visited.append(currnode)
     queue.push((currnode,[])) #list with tuple
     while queue.isEmpty()==0: #while "queue" is not empty
         currnode,path=queue.pop()
@@ -132,7 +133,7 @@ def breadthFirstSearch(problem: SearchProblem):
             if next_nodes[0] not in visited:
                 new_path=path+[next_nodes[1]]
                 queue.push((next_nodes[0],new_path))
-                visited.add(next_nodes[0])
+                visited.append(next_nodes[0])
     util.raiseNotDefined()
 
 def uniformCostSearch(problem: SearchProblem):
@@ -220,15 +221,6 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
             
            
 
-            #if next_node[0] not in visited.keys() and  any(next_node[0]==node[2][0] for node in pqueue.heap):
-                #for node in pqueue.heap:
-                  #  if node[2][0]==next_node[0]:
-                       # old_distance=problem.getCostOfActions(node[2][1])+visited[next_node[2][0]]
-                #new_distance=problem.getCostOfActions(path+[next_node[1]])+heuristic(next_node[0],problem)
-
-               # if new_distance<old_distance:
-                  #  new_path=path+[next_node[1]]
-                  #  pqueue.update((next_node[0],new_path),distance)    
 
 
         
