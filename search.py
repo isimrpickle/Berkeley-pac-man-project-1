@@ -93,6 +93,8 @@ def depthFirstSearch(problem: SearchProblem):
     path=[] 
     visited=[]
     currnode=problem.getStartState()
+    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+    print("Start:", problem.getStartState())
     if (problem.isGoalState(currnode)==True):
         return path[1]   #maybe the first node we've been provided is the goal
     stack.push((currnode,[])) #there is no path for the first node (the root) 
