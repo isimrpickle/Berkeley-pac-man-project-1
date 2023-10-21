@@ -285,7 +285,6 @@ class CornersProblem(search.SearchProblem):
         self.startingPosition = startingGameState.getPacmanPosition()
         top, right = self.walls.height-2, self.walls.width-2
         self.corners = ((1,1), (1,top), (right, 1), (right, top))
-        self.goals=None
         for corner in self.corners:
             if not startingGameState.hasFood(*corner):
                 print('Warning: no food in corner ' + str(corner))
@@ -309,17 +308,7 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        if  self.goals is None:
-            xy,self.goals=self.getStartState()
-        xy=state[0]
-        check=0
-
-        for node  in self.goals.keys():
-            if node==xy:     
-                self.goals[node]=1 #value 1 because we found it
-            if 1 in self.goals.values():
-                check+=1
-        return check==4 #if every corner is visited return true, else return false
+        return all(state[1].values()) #returns TRUE only when all the values are set to 1
         util.raiseNotDefined()
 
     def getSuccessors(self, state: Any):
@@ -349,17 +338,14 @@ class CornersProblem(search.SearchProblem):
             nextx, nexty = int(x + dx), int(y + dy)
             hitsWall=self.walls[nextx][nexty]
             if not hitsWall:
-                nextState=((nextx,nexty),state[1])
+                nextState=((nextx,nexty),state[1].copy()) #Υπάρχουν πολλά διαφορετικά ταυτόχρονα paths. Με το copy επιτυγχάνουμε το καθε  path να διατηρεί τη μοναδικότητα του
+                                                          #και ταυτόχτρονα να αλλάζουμε μόνιμα τα values του λεξικού για κάποιο path. Το πρώτο path στο οποίο όλα τα values θα γίνουν
+                                                          #1, συνεπώς και το πιο γρήγορο, το επιστρέφουμε(στο IsGoalState)
+                if nextState[0] in self.corners:  # Checking if the next_node is one of the goal corner
+                    nextState[1][nextState[0]] = 1  # Updating the dictionary with "1" status,so we know we found it
                 successors.append((nextState,action,1))
 
-           # x=state[0][0]
-           # y=state[0][1]
-           # dx, dy = Actions.directionToVector(action)
-          #  nextx, nexty = int(x + dx), int(y + dy)
-          #  if not self.walls[nextx][nexty]:
-           #     nextState = (nextx, nexty)
-           #     cost = 1
-           #    successors.append( ( nextState, action, cost) ) 
+           
         self._expanded += 1 # DO NOT CHANGE
         return successors
 
@@ -391,9 +377,13 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     admissible (as well as consistent).
     """
     corners = problem.corners # These are the corner coordinates
-    walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
+    walls = problem.walls # These are the walls of the maze, as a Grid (game.py)    
 
     "*** YOUR CODE HERE ***"
+    currnode=(state[0])
+    heuristic_distance=corners[0]-currnode
+    for goal_corner in corners:
+        local_distance=currnode[0]-corners[0][:]
     return 0 # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):

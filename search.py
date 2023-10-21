@@ -88,13 +88,10 @@ def depthFirstSearch(problem: SearchProblem):
     """
     "*** YOUR CODE HERE ***"
     from util import Stack
-    print("Start:", problem.getStartState())
     stack=Stack() #υλοποιείται στο util.h με λίστα
     path=[] 
     visited=[]
     currnode=problem.getStartState()
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
-    print("Start:", problem.getStartState())
     if (problem.isGoalState(currnode)==True):
         return path[1]   #maybe the first node we've been provided is the goal
     stack.push((currnode,[])) #there is no path for the first node (the root) 
@@ -196,14 +193,14 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     pqueue=PriorityQueue() #will return the xy,the path and the cost(distance)
     path=[]
     currnode=problem.getStartState()
-    visited=set()
+    visited=[]
     pqueue.push((currnode,[]),0)
     while not pqueue.isEmpty():
         currnode,path=pqueue.pop()
         if problem.isGoalState(currnode)==1:
             return path
         if currnode not in visited:
-            visited.add(currnode)
+            visited.append(currnode)
         neighbor_nodes=problem.getSuccessors(currnode)
         for next_node in neighbor_nodes:
             if next_node[0] not in visited and not any (next_node[0]==node[2][0] for node in pqueue.heap):
