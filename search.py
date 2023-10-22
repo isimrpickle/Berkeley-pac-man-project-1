@@ -102,6 +102,7 @@ def depthFirstSearch(problem: SearchProblem):
         if problem.isGoalState(currnode)==1:
                     return path
         next_node=problem.getSuccessors(currnode)
+        print(next_node)
         for node in next_node: #το next_node είναι λίστα με tuples. Το node[0] είναι οι συντεταγμένες
             if node[0] not in visited:
                 new_path=path+[node[1]]
