@@ -380,18 +380,13 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)    
 
     "*** YOUR CODE HERE ***"
-    print(state)
     currnode=state[0]
-    local_distance=(( currnode[0] -corners[0][0] ) ** 2 + (currnode[1] - corners[0][1]) ** 2 ) ** 0.5
-    if state[0]==corners:
-        return 0
-    for goal in corners:
-        Euclidean_distance=(( currnode[0] -goal[0] ) ** 2 + (currnode[1] - goal[1]) ** 2 ) ** 0.5
-        if Euclidean_distance==0:
-            return 0
-        if Euclidean_distance<local_distance:
-            local_distance=Euclidean_distance
-    return local_distance
+    my_corners = state[1]
+    visited_corners=[keys for keys,values in my_corners.items() if values==0 ] #Δεν χρειαζόμαστε να ελέγξουμε τη γωνία που έχουμε ήδη επισκεφθεί!
+    if len(visited_corners)==0:
+        return 0      
+    Manhattan_distance=[abs( currnode[0] -goal[0])  +abs (currnode[1] - goal[1] ) for goal in visited_corners] 
+    return max(Manhattan_distance)
     
 
 class AStarCornersAgent(SearchAgent):
