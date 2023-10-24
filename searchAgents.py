@@ -520,7 +520,10 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
-        
+        from search import breadthFirstSearch
+        return breadthFirstSearch(problem) #Θέλουμε τα πιο κοντινά μας φαγητά, άρα η breadthfirstsearch αναζήτηση είναι μια καλή επιλογή
+         
+
         util.raiseNotDefined()
 
 class AnyFoodSearchProblem(PositionSearchProblem):
@@ -557,6 +560,12 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x,y = state
 
         "*** YOUR CODE HERE ***"
+        goals=self.food.asList()
+        if state in goals:
+            return 1   #Στη γυγκεκριμένη περίπτωση κάνουμε return true χωρίς να έχουμε φάει όλα τα φαγητά καθώς μας ενδιαφέρεο αποκλειστικα
+                        #το πιο κοντινό φαγητό
+        else:
+            return 0
         util.raiseNotDefined()
 
 def mazeDistance(point1: Tuple[int, int], point2: Tuple[int, int], gameState: pacman.GameState) -> int:
